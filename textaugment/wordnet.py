@@ -95,10 +95,7 @@ class Wordnet:
         :rtype:   ndarray or scalar
         :return:  Drawn samples from the parameterized Geometric distribution.
         """
-
-        data = np.array(data)
-        first_trial = np.random.geometric(p=self.p, size=data.shape[0]) == 1  # Capture success after first trial
-        return data[first_trial]
+        pass
 
     def replace(self, data, lang, top_n):
         """
@@ -116,63 +113,7 @@ class Wordnet:
         :rtype:   str
         :return:  The augmented data
         """
-        data = data.lower().split()
-        try:
-            data_tokens = [[i, x, y] for i, (x, y) in enumerate(nltk.pos_tag(data))]
-        except LookupError:
-            # NLTK resource missing; download missing resources
-            nltk.download('punkt')
-            nltk.download('wordnet')
-            nltk.download('averaged_perceptron_tagger')
-            data_tokens = [[i, x, y] for i, (x, y) in enumerate(nltk.pos_tag(data))]
-
-        if self.v:
-            for loop in range(self.runs):
-                words = [[i, x] for i, x, y in data_tokens if y[0] == 'V']
-                words = [i for i in self.geometric(data=words)]  # List of selected words
-                if len(words) >= 1:  # There are synonyms
-                    for word in words:
-                        try:
-                            synonyms1 = wordnet.synsets(word[1], wordnet.VERB, lang=lang)  # Return verbs only
-                            synonyms = list(
-                                set(chain.from_iterable([syn.lemma_names(lang=lang) for syn in synonyms1]))
-                            )
-                        except LookupError:
-                            continue
-                        synonyms_ = []  # Synonyms with no underscores goes here
-                        for w in synonyms:
-                            if '_' not in w:
-                                synonyms_.append(w)  # Remove words with underscores
-                        if len(synonyms_) >= 1:
-                            synonyms_ = synonyms_[:top_n if top_n else len(synonyms_)]  # use top n or all synonyms
-                            synonym = self.geometric(data=synonyms_).tolist()
-                            if synonym:  # There is a synonym
-                                data[int(word[0])] = synonym[0].lower()  # Take the first success
-
-        if self.n:
-            for loop in range(self.runs):
-                words = [[i, x] for i, x, y in data_tokens if y[0] == 'N']
-                words = [i for i in self.geometric(data=words)]  # List of selected words
-                if len(words) >= 1:  # There are synonyms
-                    for word in words:
-                        try:
-                            synonyms1 = wordnet.synsets(word[1], wordnet.NOUN, lang=lang)  # Return nouns only
-                            synonyms = list(
-                                set(chain.from_iterable([syn.lemma_names(lang=lang) for syn in synonyms1]))
-                            )
-                        except LookupError:
-                            continue
-                        synonyms_ = []  # Synonyms with no underscores goes here
-                        for w in synonyms:
-                            if '_' not in w:
-                                synonyms_.append(w)  # Remove words with underscores
-                        if len(synonyms_) >= 1:
-                            synonyms_ = synonyms_[:top_n if top_n else len(synonyms_)]  # use top n or all synonyms
-                            synonym = self.geometric(data=synonyms_).tolist()
-                            if synonym:  # There is a synonym
-                                data[int(word[0])] = synonym[0].lower()  # Take the first success
-
-        return " ".join(data)
+        pass
 
     def augment(self, data, lang="eng", top_n=10):
         """
@@ -190,13 +131,4 @@ class Wordnet:
         :rtype:   str
         :return:  The augmented data
         """
-        # Error handling
-        if type(data) is not str:
-            raise TypeError("Only strings are supported")
-        if type(lang) is not str:
-            raise TypeError("Only strings are supported")
-        if type(top_n) is not int:
-            raise TypeError("Only integers are supported")
-
-        data = self.replace(data, lang, top_n)
-        return data 
+        pass

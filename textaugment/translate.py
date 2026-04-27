@@ -128,11 +128,7 @@ class Translate:
         :rtype:         bool
         :return:        True or False
         '''
-        try:
-            asyncio.get_running_loop()
-            return True
-        except RuntimeError:
-            return False
+        pass
 
     def __in_jupyter(self) -> bool:
         '''
@@ -141,13 +137,7 @@ class Translate:
         :rtype:         bool
         :return:        True or False
         '''
-        try:
-            
-            from IPython import get_ipython
-            shell = get_ipython().__class__.__name__
-            return shell == 'ZMQInteractiveShell'
-        except Exception:
-            return False
+        pass
 
     def augment(self, text: str) -> str:
         '''
@@ -158,22 +148,4 @@ class Translate:
         :rtype:         str
         :return:        the augmented text
         '''
-        if type(text) is not str:
-            raise TypeError('DataType must be a string')
-                
-        async def translate_text() -> str:
-            async with Translator() as translator:
-                forward: Translated = await translator.translate(text.lower(), dest=self.to, src=self.src)
-                backward: Translated = await translator.translate(forward.text, dest=self.src, src=self.to)
-                return backward.text
-                
-        if not self.__event_loop_running():
-            return asyncio.run(translate_text())
-
-        if self.__in_jupyter():
-            nest_asyncio.apply()
-            loop = asyncio.get_event_loop()
-            return loop.run_until_complete(translate_text())
-
-        loop = asyncio.get_event_loop()
-        return loop.run_until_complete(translate_text())
+        pass

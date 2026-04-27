@@ -31,9 +31,7 @@ class AEDA:
     @staticmethod
     def validate(**kwargs):
         """Validate input data"""
-        if 'sentence' in kwargs:
-            if not isinstance(kwargs['sentence'].strip(), str) or len(kwargs['sentence'].strip()) == 0:
-                raise TypeError("sentence must be a valid sentence")
+        pass
 
     def __init__(self, punctuations=['.', ';', '?', ':', '!', ','], random_state=1):
         """A method to initialize parameters
@@ -62,20 +60,4 @@ class AEDA:
         :rtype:   str
         :return:  Augmented sentence
         """
-        self.validate(sentence=sentence)
-
-        sentence = sentence.strip().split(' ')
-        len_sentence = len(sentence)
-        # Get random number of punctuations to be inserted
-        # The number of punctuations to be inserted is between 1 and 1/3 of the length of the sentence
-        num_punctuations = random.randint(1, len_sentence // 3)
-        augmented_sentence = sentence.copy()
-
-        # Insert random punctuations in random positions
-        for _ in range(num_punctuations):
-            punct = random.choice(self.punctuations) # Select punctuation to be inserted
-            pos = random.randint(0, len(augmented_sentence) - 1) # Select position to insert punctuation
-            augmented_sentence = augmented_sentence[:pos] + [punct] + augmented_sentence[pos:] # Insert punctuation
-        augmented_sentence = ' '.join(augmented_sentence)
-
-        return augmented_sentence
+        pass

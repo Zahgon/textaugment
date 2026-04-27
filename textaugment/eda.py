@@ -40,46 +40,18 @@ class EDA:
     @staticmethod
     def _get_synonyms(word):
         """Generate synonym"""
-        synonyms = set()
-        for syn in wordnet.synsets(word):
-            for lemma in syn.lemmas():
-                synonym = lemma.name().replace("_", " ").replace("-", " ").lower()
-                synonym = "".join([char for char in synonym if char in ' qwertyuiopasdfghjklzxcvbnm'])
-                synonyms.add(synonym)
-        if word in synonyms:
-            synonyms.remove(word)
-        synonyms = sorted(list(synonyms))
-        random.shuffle(synonyms)
-        return synonyms
+        pass
 
 
     @staticmethod
     def swap_word(new_words):
         """Swap words"""
-        random_idx_1 = random.randint(0, len(new_words) - 1)
-        random_idx_2 = random_idx_1
-        counter = 0
-        while random_idx_2 == random_idx_1:
-            random_idx_2 = random.randint(0, len(new_words) - 1)
-            counter += 1
-            if counter > 3:
-                return new_words
-        new_words[random_idx_1], new_words[random_idx_2] = new_words[random_idx_2], new_words[random_idx_1]
-        return new_words
+        pass
 
     @staticmethod
     def validate(**kwargs):
         """Validate input data"""
-
-        if 'p' in kwargs:
-            if kwargs['p'] > 1 or kwargs['p'] < 0:
-                raise TypeError("p must be a fraction between 0 and 1")
-        if 'sentence' in kwargs:
-            if not isinstance(kwargs['sentence'], str) or len(kwargs['sentence'].strip()) == 0:
-                raise TypeError("sentence must be a valid sentence")
-        if 'n' in kwargs:
-            if not isinstance(kwargs['n'], int):
-                raise TypeError("n must be a valid integer")
+        pass
 
     def __init__(self, stop_words=None, random_state=1):
         """A method to initialize parameters
@@ -107,19 +79,7 @@ class EDA:
 
     def add_word(self, new_words):
         """Insert word"""
-        synonyms = list()
-        counter = 0
-        while len(synonyms) < 1:
-            random_word_list = list([word for word in new_words if word not in self.stopwords])
-            random_word = random_word_list[random.randint(0, len(random_word_list) - 1)]
-            synonyms = self._get_synonyms(random_word)
-            counter += 1
-            if counter >= 10:
-                return new_words  # See Issue 14 for details
-        random_synonym = synonyms[0]  # TODO
-        random_idx = random.randint(0, len(new_words) - 1)
-        new_words.insert(random_idx, random_synonym)
-        return new_words
+        pass
 
     # def synonym_replacement_top_n(self,
     #                               sentence: str,
@@ -190,26 +150,7 @@ class EDA:
         :rtype:   str
         :return:  Augmented sentence
         """
-        self.validate(sentence=sentence, n=n)
-        self.n = n
-        self.sentence = sentence
-        words = sentence.split()
-        new_words = words.copy()
-        random_word_list = sorted(set([word for word in words if word not in self.stopwords]))
-        random.shuffle(random_word_list)
-        replaced = 0
-        for random_word in random_word_list:
-            synonyms = self._get_synonyms(random_word)
-            if len(synonyms) > 0:
-                synonyms = synonyms[:top_n if top_n else len(synonyms)]  # use top n or all synonyms
-                synonym = random.choice(synonyms)
-                new_words = [synonym if word == random_word else word for word in new_words]
-                replaced += 1
-            if replaced >= self.n:
-                break
-        sentence = ' '.join(new_words)
-
-        return sentence
+        pass
 
     def random_deletion(self, sentence: str, p: float = 0.1):
         """Randomly delete words from the sentence with probability p
@@ -222,22 +163,7 @@ class EDA:
         :rtype:   str
         :return:  Augmented sentence
         """
-        self.validate(sentence=sentence, p=p)
-        self.p = p
-        self.sentence = sentence
-        words = sentence.split()
-        if len(words) == 1:
-            return words[0]
-        new_words = list()
-        for word in words:
-            r = random.uniform(0, 1)
-            if r > self.p:
-                new_words.append(word)
-        # if all words are deleted, just return a random word
-        if len(new_words) == 0:
-            return random.choice(words)
-
-        return " ".join(new_words)
+        pass
 
     def random_swap(self, sentence: str, n: int = 1):
         """Randomly swap two words in the sentence n times
@@ -250,14 +176,7 @@ class EDA:
         :rtype:   str
         :return:  Augmented sentence
         """
-        self.validate(sentence=sentence, n=n)
-        self.n = n
-        self.sentence = sentence
-        words = sentence.split()
-        new_words = words.copy()
-        for _ in range(self.n):
-            new_words = self.swap_word(new_words)
-        return " ".join(new_words)
+        pass
 
     def random_insertion(self, sentence: str, n: int = 1):
         """Randomly insert n words into the sentence
@@ -270,11 +189,4 @@ class EDA:
         :rtype:   str
         :return:  Augmented sentence
         """
-        self.validate(sentence=sentence, n=n)
-        self.n = n
-        self.sentence = sentence
-        words = sentence.split()
-        new_words = words.copy()
-        for _ in range(self.n):
-            new_words = self.add_word(new_words)
-        return " ".join(new_words)
+        pass

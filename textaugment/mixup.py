@@ -22,26 +22,7 @@ class MIXUP:
     @staticmethod
     def validate(**kwargs):
         """Validate input data"""
-
-        if 'data' in kwargs:
-            if isinstance(kwargs['data'], list):
-                kwargs['data'] = np.array(kwargs['data'])
-            if not isinstance(kwargs['data'], np.ndarray):
-                raise TypeError("data must be numpy array. Found " + str(type(kwargs['data'])))
-        if 'labels' in kwargs:
-            if isinstance(kwargs['labels'], (list, type(None))):
-                kwargs['labels'] = np.array(kwargs['labels'])
-            if not isinstance(kwargs['labels'], np.ndarray):
-                raise TypeError("labels must be numpy array. Found " + str(type(kwargs['labels'])))
-        if 'batch_size' in kwargs:
-            if not isinstance(kwargs['batch_size'], int):
-                raise TypeError("batch_size must be a valid integer. Found " + str(type(kwargs['batch_size'])))
-        if 'shuffle' in kwargs:
-            if not isinstance(kwargs['shuffle'], bool):
-                raise TypeError("shuffle must be a boolean. Found " + str(type(kwargs['shuffle'])))
-        if 'runs' in kwargs:
-            if not isinstance(kwargs['runs'], int):
-                raise TypeError("runs must be a valid integer. Found " + str(type(kwargs['runs'])))
+        pass
 
     def __init__(self, random_state=1, runs=1):
         self.random_state = random_state
@@ -66,21 +47,7 @@ class MIXUP:
         :rtype: tuple
         :return: Returns mixed inputs, pairs of targets, and lambda
         """
-        if self.runs is None:
-            self.runs = 1
-        output_x = []
-        output_y = []
-        batch_size = x.shape[0]
-        for i in range(self.runs):
-            lam_vector = np.random.beta(alpha, alpha, batch_size)
-            index = np.random.permutation(batch_size)
-            mixed_x = (x.T * lam_vector).T + (x[index, :].T * (1.0 - lam_vector)).T
-            output_x.append(mixed_x)
-            if y is None:
-                return np.concatenate(output_x, axis=0)
-            mixed_y = (y.T * lam_vector).T + (y[index].T * (1.0 - lam_vector)).T
-            output_y.append(mixed_y)
-        return np.concatenate(output_x, axis=0), np.concatenate(output_y, axis=0)
+        pass
 
     def flow(self, data, labels=None, batch_size=32, shuffle=True, runs=1):
         """This function implements the batch iterator and specifically calls mixup
@@ -93,36 +60,4 @@ class MIXUP:
 
         :rtype:   array or tuple
         :return:  array or tuple of arrays (X_data array, labels array)."""
-
-        self.validate(data=data, labels=labels, batch_size=batch_size, shuffle=shuffle, runs=runs)
-
-        self.runs = runs
-
-        num_batches_per_epoch = int((len(data) - 1) / batch_size) + 1
-
-        def data_generator():
-            data_size = len(data)
-            while True:
-                # Shuffle the data at each epoch
-                if shuffle:
-                    shuffle_indices = np.random.permutation(np.arange(data_size))
-                    shuffled_data = data[shuffle_indices]
-                    if labels is not None:
-                        shuffled_labels = labels[shuffle_indices]
-                else:
-                    shuffled_data = data
-                    if labels is not None:
-                        shuffled_labels = labels
-                for batch_num in range(num_batches_per_epoch):
-                    start_index = batch_num * batch_size
-                    end_index = min((batch_num + 1) * batch_size, data_size)
-                    X = shuffled_data[start_index: end_index]
-                    if labels is None:
-                        X = self.mixup_data(X, y=None)
-                        yield X
-                    else:
-                        y = shuffled_labels[start_index: end_index]
-                        X, y = self.mixup_data(X, y)
-                        yield X, y
-
-        return data_generator(), num_batches_per_epoch
+        pass
